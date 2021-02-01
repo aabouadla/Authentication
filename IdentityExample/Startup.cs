@@ -24,15 +24,17 @@ namespace IdentityExample
                 config.UseInMemoryDatabase("Memo");
             });
 
-            // AddIdentity registers the services
+            // Add Identity registers the services
             services.AddIdentity<IdentityUser, IdentityRole>(config =>
             {
+                // config the password 
                 config.Password.RequiredLength = 4;
                 config.Password.RequireDigit = false;
                 config.Password.RequireUppercase = false;
                 config.Password.RequireNonAlphanumeric = false;
+                config.SignIn.RequireConfirmedEmail = true;
             })
-                .AddEntityFrameworkStores<AppDbContext>() // to let the Identity service know to which Db that sghoul communicate
+                .AddEntityFrameworkStores<AppDbContext>() // to let the Identity service know to which Db that should communicate
                 .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(config =>
@@ -40,6 +42,7 @@ namespace IdentityExample
                 config.Cookie.Name = "Identity.Cookie";
                 config.LoginPath = "/Home/Login";
             });
+
             // Grandmas.Cookie
             // Specifying a Cookie Handler to produce an implementation of an Authentication Handler
             // it will be injected in our service and will be used in app.UseAuthorization 
